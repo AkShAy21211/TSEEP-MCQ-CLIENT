@@ -1,25 +1,25 @@
 import React from "react";
-
+import {Link} from "react-router-dom";
 function OnBoarding() {
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center text-center p-6">
       {/* Main Content Centered */}
       <div className="flex-grow flex flex-col justify-center">
         {/* Title with Underline */}
-        <h1 className="text-[3rem] lg:text-[4.66rem] font-semibold relative leading-tight text-center">
+        <h1 className="text-[3rem] lg:text-[4.66rem] onboarding-title relative leading-tight text-center">
           Welcome to{" "}
           <span className="relative inline-block">
-            <span className="relative inline-block">
+            <span className="relative inline-block " >
               <span className="relative inline-block px-2 text-nowrap">
                 TSEEP Mastery Box
-                <span className="absolute left-0 bottom-3 w-full h-[12px] lg:h-[18px] bg-yellow-400 -z-10"></span>
+                <span className="absolute left-0 bottom-5 w-full h-[12px] lg:h-[18px] bg-yellow-400 -z-10"></span>
               </span>
             </span>
           </span>
         </h1>
 
         {/* Subtitle */}
-        <p className=" text-casal font-extralight text-[1.3rem] lg:text-[1.8rem] ">
+        <p className="font-extralight text-[1.3rem] lg:text-[1.8rem] onboarding-para ">
           Unlock your potential with{" "}
           <span className="font-bold text-gray-900">AI inspired tool</span>
         </p>
@@ -40,9 +40,9 @@ function OnBoarding() {
         </label>
 
         {/* Button */}
-        <button className="mt-4 md:mt-0 px-6 py-2 bg-casal text-white rounded-lg  transition">
+        <Link to={'/login'} className="mt-4 md:mt-0 px-6 py-2 bg-casal text-white rounded-lg  transition">
           Get Started
-        </button>
+        </Link>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import "tailwindcss";
 
 
@@ -6,19 +7,24 @@
     font-style: normal;
     font-weight: normal;
     src: local("Oceanwide Semibold"),
-        url("/fonts/Oceanwide-Semibold.woff") format("woff");
+        url("/fonts/Oceanwide-Semibold.otf") format("woff");
 }
 
-@font-face {
-    font-family: "Oceanwide Semibold Oblique";
-    font-style: normal;
-    font-weight: normal;
-    src: local("Oceanwide Semibold Oblique"),
-        url("/fonts/Oceanwide-SemiboldOblique.woff") format("woff");
+.onboarding-title {
+  font-family: "Oceanwide Semibold", sans-serif;
+  font-weight: 600;
+  color: #313131;
+  font-style: normal;
+}
+
+.onboarding-para {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  color: #313131ce;
+  font-style: normal;
 }
 
 @theme {
-  --font-oceanwide:"Oceanwide","sans-serif";
   --color-casal: #2a586f;
   
 }

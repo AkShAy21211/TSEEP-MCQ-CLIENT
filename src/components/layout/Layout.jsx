@@ -11,7 +11,7 @@ const Layout = ({ children }) => {
       {/* Main Content */}
       <div className="flex flex-col flex-1">
         <Header />
-        <main className="p-6 font-oceanwide">{children}</main>
+        <main className="p-6">{children}</main>
       </div>
     </div>
   );
