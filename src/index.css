@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+@theme{
+
+    --color-casal:#2A586F
+}
