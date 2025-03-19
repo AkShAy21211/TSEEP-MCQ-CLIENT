@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import OnBoarding from "./pages/OnBoarding";
 import Layout from "./components/layout/Layout";
 import Register from "./pages/Register";
+import Login from "./pages/Login";
 
 function App() {
   return (
@@ -22,6 +23,16 @@ function App() {
           element={
             <Layout>
               <Register />
+            </Layout>
+          }
+        />
+
+          <Route
+          path="/login"
+          exact
+          element={
+            <Layout>
+              <Login />
             </Layout>
           }
         />
