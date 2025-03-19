@@ -3,7 +3,7 @@ import logo from "../../assets/logo.png";
 import avatar from "../../assets/avatar.png";
 const Header = () => {
   return (
-    <header className="flex justify-between items-center bg-white shadow-md p-4">
+    <header className="flex justify-between items-center bg-white p-4">
       {/* Logo */}
       <div className="text-xl font-bold">
         <img src={logo} alt="TSEEP" />

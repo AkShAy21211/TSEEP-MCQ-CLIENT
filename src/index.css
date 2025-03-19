@@ -1,6 +1,25 @@
 @import "tailwindcss";
 
-@theme{
 
-    --color-casal:#2A586F
+@font-face {
+    font-family: "Oceanwide Semibold";
+    font-style: normal;
+    font-weight: normal;
+    src: local("Oceanwide Semibold"),
+        url("/fonts/Oceanwide-Semibold.woff") format("woff");
 }
+
+@font-face {
+    font-family: "Oceanwide Semibold Oblique";
+    font-style: normal;
+    font-weight: normal;
+    src: local("Oceanwide Semibold Oblique"),
+        url("/fonts/Oceanwide-SemiboldOblique.woff") format("woff");
+}
+
+@theme {
+  --font-oceanwide:"Oceanwide","sans-serif";
+  --color-casal: #2a586f;
+  
+}
+
