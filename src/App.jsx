@@ -3,6 +3,7 @@ import OnBoarding from "./pages/OnBoarding";
 import Layout from "./components/layout/Layout";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import Question from "./pages/Question";
 
 function App() {
   return (
@@ -33,6 +34,15 @@ function App() {
           element={
             <Layout>
               <Login />
+            </Layout>
+          }
+        />
+          <Route
+          path="/question"
+          exact
+          element={
+            <Layout>
+              <Question />
             </Layout>
           }
         />
