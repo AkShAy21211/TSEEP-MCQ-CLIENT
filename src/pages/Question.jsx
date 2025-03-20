@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import menu from "../assets/menu.png";
 import clock from "../assets/clock.png";
 import Button from "../components/ui/Button";
@@ -39,6 +39,16 @@ function Question() {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [answers, setAnswers] = useState([]);
 
+
+  // fetch answers from local storage incase of refresh 
+  useEffect(() => {
+    const answers = localStorage.getItem("answers");
+    if (answers) {
+      setAnswers(JSON.parse(answers));
+    }
+  }, []);
+
+  // next question navigation handler
   const handleNext = useCallback(() => {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion((prev) => prev + 1);
@@ -46,6 +56,7 @@ function Question() {
     }
   }, [currentQuestion]);
 
+  // previous question navigation handller
   const handlePrevious = useCallback(() => {
     if (currentQuestion > 0) {
       setCurrentQuestion((prev) => prev - 1);
@@ -53,6 +64,8 @@ function Question() {
     }
   }, [currentQuestion]);
 
+  
+  // select answer handler to save in answer state veriable and also to local storage
   const handleSelectAnswer = useCallback((answer) => {
     setAnswers((prev) => {
       const exists = prev.some((item) => item._id === answer._id);
@@ -65,13 +78,25 @@ function Question() {
         return [...prev, answer];
       }
     });
+    let answers = localStorage.getItem("answers");
+    if (answers) {
+      answers = JSON.parse(answers);
+      const existing = answers.find((a) => a._id === answer._id);
+      if (existing) {
+        existing.answer = answer.answer;
+      } else {
+        answers.push(answer);
+      }
+
+      localStorage.setItem("answers", JSON.stringify(answers));
+    } else {
+      localStorage.setItem("answers", JSON.stringify([answer]));
+    }
   }, []);
 
-
-    const handleAutoSubmit = () => {
+  const handleAutoSubmit = () => {
     // Logic to submit the quiz
     console.log("Time's up! Submitting the quiz...");
-    alert("Time's up! Quiz submitted.");
   };
 
   return (
@@ -134,10 +159,10 @@ function Question() {
             Assess Your{" "}
             <span className="relative">
               Intelligence
-              <span className="absolute left-0 bottom-[-4px] w-full h-[3px] bg-yellow-500"></span>
+              <span className="absolute left-0 bottom-[1px] w-full h-[3px] bg-yellow-500 -z-10"></span>
             </span>
           </h1>
-       <Timer onTimeUp={handleAutoSubmit}/>
+          <Timer onTimeUp={handleAutoSubmit} />
         </div>
 
         {/* Progress Bar */}

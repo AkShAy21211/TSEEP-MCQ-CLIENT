@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Question from "./pages/Question";
 import NotFound from "./pages/NotFound";
+import Success from "./pages/Success";
 
 function App() {
   return (
@@ -47,7 +48,15 @@ function App() {
             </Layout>
           }
         />
-
+     <Route
+          path="/success"
+          exact
+          element={
+            <Layout>
+              <Success />
+            </Layout>
+          }
+        />
         <Route
           path="/*"
           exact
