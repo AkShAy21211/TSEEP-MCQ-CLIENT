@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { registerSchema } from "../validation";
+import Button from "../components/ui/Button";
 
 function Register() {
   const [countryCode, setCountryCode] = useState("");
@@ -20,8 +21,8 @@ function Register() {
 
   const onSubmit = (data) => {
     console.log(countryCode);
-    data.phone = `+${countryCode} ${data.phone}`
-    
+    data.phone = `+${countryCode} ${data.phone}`;
+
     console.log("Form Submitted:", data);
   };
 
@@ -70,7 +71,7 @@ function Register() {
             <div className="flex items-center border rounded-md">
               <PhoneInput
                 country={"in"}
-                onChange={value => setCountryCode(value)}
+                onChange={(value) => setCountryCode(value)}
                 value={countryCode}
                 enableSearch={true}
                 containerStyle={{ width: "120px", height: "40px" }}
@@ -133,12 +134,11 @@ function Register() {
           </div>
 
           {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full bg-casal text-white py-2 rounded-md  transition"
-          >
-            Save
-          </button>
+          <Button
+            className={"w-full bg-casal text-white py-2 rounded-md  transition"}
+            type={"submit"}
+            label={"Submit"}
+          />
         </form>
 
         {/* Login Link */}

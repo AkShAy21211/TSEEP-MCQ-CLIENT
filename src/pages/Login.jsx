@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../validation";
+import Button from "../components/ui/Button";
 function Login() {
   const [countryCode, setCountryCode] = useState("");
   const {
@@ -58,8 +59,6 @@ function Login() {
             )}
           </div>
 
-       
-
           {/* Password */}
           <div className="mb-4">
             <label className="block text-gray-700 font-medium">Password</label>
@@ -75,12 +74,12 @@ function Login() {
           </div>
 
           {/* Submit Button */}
-          <button
+
+          <Button
+            label={"Submit"}
             type="submit"
             className="w-full bg-casal text-white py-2 rounded-md  transition"
-          >
-            Save
-          </button>
+          />
         </form>
 
         {/* Login Link */}
