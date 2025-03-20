@@ -4,6 +4,7 @@ import clock from "../assets/clock.png";
 import Button from "../components/ui/Button";
 import arrowL from "../assets/arrow-left.png";
 import arrowR from "../assets/arrow-right.png";
+import Timer from "../components/ui/Timer";
 
 const questions = [
   {
@@ -65,6 +66,13 @@ function Question() {
       }
     });
   }, []);
+
+
+    const handleAutoSubmit = () => {
+    // Logic to submit the quiz
+    console.log("Time's up! Submitting the quiz...");
+    alert("Time's up! Quiz submitted.");
+  };
 
   return (
     <div className="flex flex-col sm:flex-row min-h-screen">
@@ -129,12 +137,7 @@ function Question() {
               <span className="absolute left-0 bottom-[-4px] w-full h-[3px] bg-yellow-500"></span>
             </span>
           </h1>
-          <div
-            className="bg-yellow-500 flex gap-2 px-4 py-2 rounded text-sm text-nowrap"
-            aria-label="Timer"
-          >
-            <img src={clock} className="w-5 h-5" alt="timer" /> 5 Min
-          </div>
+       <Timer onTimeUp={handleAutoSubmit}/>
         </div>
 
         {/* Progress Bar */}

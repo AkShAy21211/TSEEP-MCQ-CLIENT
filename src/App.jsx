@@ -4,6 +4,7 @@ import Layout from "./components/layout/Layout";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Question from "./pages/Question";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -28,7 +29,7 @@ function App() {
           }
         />
 
-          <Route
+        <Route
           path="/login"
           exact
           element={
@@ -37,12 +38,22 @@ function App() {
             </Layout>
           }
         />
-          <Route
+        <Route
           path="/question"
           exact
           element={
             <Layout>
               <Question />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/*"
+          exact
+          element={
+            <Layout>
+              <NotFound />
             </Layout>
           }
         />
