@@ -5,7 +5,7 @@ import axios from "axios";
 
 function createAxiosInstance(resource) {
   const api = axios.create({
-    baseURL: `${import.meta.env.VITE_REACT_DEPLOY_URL}/api/${resource}`,
+    baseURL: `https://tseep-mcq-server.onrender.com/api/${resource}`,
     headers: {
       "Content-Type": "application/json",
     },
