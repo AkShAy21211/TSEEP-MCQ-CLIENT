@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import OnBoarding from "./pages/OnBoarding";
 import Layout from "./components/layout/Layout";
 import Register from "./pages/Register";
@@ -6,6 +7,8 @@ import Login from "./pages/Login";
 import Question from "./pages/Question";
 import NotFound from "./pages/NotFound";
 import Success from "./pages/Success";
+import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
 
 function App() {
   return (
@@ -15,46 +18,57 @@ function App() {
           path="/"
           exact
           element={
-            <Layout>
-              <OnBoarding />
-            </Layout>
+            <PublicRoute>
+              <Layout>
+                <OnBoarding />
+              </Layout>
+            </PublicRoute>
           }
         />
         <Route
           path="/register"
           exact
           element={
-            <Layout>
-              <Register />
-            </Layout>
+            <PublicRoute>
+              <Layout>
+                <Register />
+              </Layout>
+            </PublicRoute>
           }
         />
 
         <Route
           path="/login"
           exact
+          
           element={
-            <Layout>
-              <Login />
-            </Layout>
+            <PublicRoute>
+              <Layout>
+                <Login />
+              </Layout>
+            </PublicRoute>
           }
         />
         <Route
-          path="/question"
+          path="/questions"
           exact
           element={
-            <Layout>
-              <Question />
-            </Layout>
+            <ProtectedRoute>
+              <Layout>
+                <Question />
+              </Layout>
+            </ProtectedRoute>
           }
         />
-     <Route
+        <Route
           path="/success"
           exact
           element={
-            <Layout>
-              <Success />
-            </Layout>
+            <ProtectedRoute>
+              <Layout>
+                <Success />
+              </Layout>
+            </ProtectedRoute>
           }
         />
         <Route
@@ -67,6 +81,7 @@ function App() {
           }
         />
       </Routes>
+      <Toaster />
     </Router>
   );
 }

@@ -1,29 +1,42 @@
 import React, { useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { registerSchema } from "../validation";
 import Button from "../components/ui/Button";
-
+import { registerHandler } from "../api/auth";
+import toast from "react-hot-toast";
 function Register() {
+  const navigate = useNavigate();
   const [countryCode, setCountryCode] = useState("");
   const {
     register,
     handleSubmit,
-    setValue,
-    watch,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(registerSchema),
   });
 
-  const onSubmit = (data) => {
-    console.log(countryCode);
-    data.phone = `+${countryCode} ${data.phone}`;
-
-    console.log("Form Submitted:", data);
+  const onSubmit = async (data) => {
+    data.phone = `+${countryCode}${data.phone}`;
+    try {      
+      const response = await registerHandler(data);
+      localStorage.setItem("token", response.token);
+      navigate("/questions");
+      toast.success(response.message, {
+        position: "top-center",
+        duration: 5000,
+      });
+    } catch (error) {
+      console.log(error);
+      
+      toast.error(error.response.data.message, {
+        position: "top-center",
+        duration: 5000,
+      });
+    }
   };
 
   return (
@@ -40,12 +53,12 @@ function Register() {
             <label className="block text-gray-700 font-medium">Full Name</label>
             <input
               type="text"
-              {...register("fullName")}
+              {...register("fullname")}
               placeholder="Enter your name"
               className="w-full mt-1 px-3 py-2 border rounded-md  outline-none"
             />
-            {errors.fullName && (
-              <p className="text-red-500 text-sm">{errors.fullName.message}</p>
+            {errors.fullname && (
+              <p className="text-red-500 text-sm">{errors.fullname.message}</p>
             )}
           </div>
 
@@ -135,7 +148,7 @@ function Register() {
 
           {/* Submit Button */}
           <Button
-            className={"w-full bg-casal text-white py-2 rounded-md  transition"}
+            className={"w-full bg-casal text-white py-2 rounded-md  transition cursor-pointer"}
             type={"submit"}
             label={"Submit"}
           />

@@ -5,42 +5,22 @@ import Button from "../components/ui/Button";
 import arrowL from "../assets/arrow-left.png";
 import arrowR from "../assets/arrow-right.png";
 import Timer from "../components/ui/Timer";
-
-const questions = [
-  {
-    _id: 1,
-    question: "Which of the following words is a synonym for 'exhilarating'?",
-    options: ["Exciting", "Boring", "Tiresome", "Frightening", "Confusing"],
-    answer: "Exciting",
-  },
-  {
-    _id: 2,
-    question: "What is the capital of France?",
-    options: ["Berlin", "Madrid", "Paris", "Lisbon"],
-    answer: "Paris",
-  },
-  {
-    _id: 3,
-    question: "What is 2 + 2?",
-    options: ["3", "4", "5", "6"],
-    answer: "4",
-  },
-  {
-    _id: 5,
-    question: "What is 2 + 2?",
-    options: ["3", "4", "5", "6"],
-    answer: "4",
-  },
-];
+import { getQuestions } from "../api/question";
+import Loading from "../components/ui/Loading";
+import { submitTest } from "../api/test";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function Question() {
+  const navigate = useNavigate();
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [answers, setAnswers] = useState([]);
 
-
-  // fetch answers from local storage incase of refresh 
+  // fetch answers from local storage incase of refresh
   useEffect(() => {
     const answers = localStorage.getItem("answers");
     if (answers) {
@@ -48,13 +28,35 @@ function Question() {
     }
   }, []);
 
+  // fetch questions on component mount
+  useEffect(() => {
+    fetchQuestions();
+  }, []);
+
+  async function fetchQuestions() {
+    try {
+      const response = await getQuestions();
+      console.log(response);
+
+      setQuestions(response);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  }
   // next question navigation handler
   const handleNext = useCallback(() => {
+    if (currentQuestion === questions.length-1) {
+      handleSubmit();
+      return;
+    }
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion((prev) => prev + 1);
       setSelectedAnswer(null);
+      return;
     }
-  }, [currentQuestion]);
+  }, [currentQuestion, answers, questions, handleSubmit]);
 
   // previous question navigation handller
   const handlePrevious = useCallback(() => {
@@ -64,15 +66,16 @@ function Question() {
     }
   }, [currentQuestion]);
 
-  
   // select answer handler to save in answer state veriable and also to local storage
   const handleSelectAnswer = useCallback((answer) => {
     setAnswers((prev) => {
-      const exists = prev.some((item) => item._id === answer._id);
+      const exists = prev.some((item) => item.questionId === answer.questionId);
 
       if (exists) {
         return prev.map((item) =>
-          item._id === answer._id ? { ...item, answer: answer.answer } : item
+          item.questionId === answer.questionId
+            ? { ...item, answer: answer.answer }
+            : item
         );
       } else {
         return [...prev, answer];
@@ -81,7 +84,7 @@ function Question() {
     let answers = localStorage.getItem("answers");
     if (answers) {
       answers = JSON.parse(answers);
-      const existing = answers.find((a) => a._id === answer._id);
+      const existing = answers.find((a) => a.questionId === answer.questionId);
       if (existing) {
         existing.answer = answer.answer;
       } else {
@@ -94,10 +97,26 @@ function Question() {
     }
   }, []);
 
-  const handleAutoSubmit = () => {
-    // Logic to submit the quiz
-    console.log("Time's up! Submitting the quiz...");
-  };
+  async function handleSubmit() {
+    try {
+      const response = await submitTest(answers);
+      toast.success(response.message, {
+        position: "top-center",
+        duration: 5000,
+      });
+      localStorage.removeItem("answers");
+      navigate("/success")
+    } catch (error) {
+      toast.error(error.response.data.message, {
+        position: "top-center",
+        duration: 5000,
+      });
+    }
+  }
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="flex flex-col sm:flex-row min-h-screen">
@@ -121,7 +140,7 @@ function Question() {
                   key={i}
                   className={`p-2.5 text-center cursor-pointer border border-casal rounded-md 
                   ${
-                    answers.find((answer) => answer._id === question._id)
+                    answers.find((answer) => answer.questionId === question._id)
                       ? "bg-[#F7FFEB]" // Green: Answered
                       : currentQuestion > i
                       ? "bg-gray-500" // Gray: Skipped
@@ -162,7 +181,7 @@ function Question() {
               <span className="absolute left-0 bottom-[1px] w-full h-[3px] bg-yellow-500 -z-10"></span>
             </span>
           </h1>
-          <Timer onTimeUp={handleAutoSubmit} />
+          <Timer onTimeUp={handleSubmit} />
         </div>
 
         {/* Progress Bar */}
@@ -203,18 +222,20 @@ function Question() {
                   name="quiz"
                   value={
                     answers.find(
-                      (answer) => answer._id === questions[currentQuestion]._id
+                      (answer) =>
+                        answer.questionId === questions[currentQuestion]._id
                     )?.answer || option
                   }
                   checked={
                     answers.find(
-                      (answer) => answer._id === questions[currentQuestion]._id
+                      (answer) =>
+                        answer.questionId === questions[currentQuestion]._id
                     )?.answer === option
                   }
                   onChange={() => {
                     setSelectedAnswer(option);
                     handleSelectAnswer({
-                      _id: questions[currentQuestion]._id,
+                      questionId: questions[currentQuestion]._id,
                       answer: option,
                     });
                   }}
@@ -243,7 +264,6 @@ function Question() {
               className="px-4 py-2 rounded focus:outline-none bg-casal flex gap-1 cursor-pointer"
               label="Next"
               onClick={handleNext}
-              disabled={currentQuestion === questions.length - 1}
             />
           </div>
         </div>

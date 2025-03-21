@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaSmile, FaMeh, FaFrown, FaGrin, FaSadTear } from "react-icons/fa";
 import Button from "../components/ui/Button";
 import check from "../assets/check.png";
@@ -8,18 +8,47 @@ import excellent from "../assets/excellent.png";
 import sad from "../assets/sad.png";
 import smile from "../assets/smile.png";
 import hot from "../assets/hot.png";
+import { getTestResult } from "../api/test";
 
 function Success() {
-  const [selectedEmoji, setSelectedEmoji] = useState(null);
+  const [selectedEmoji, setSelectedEmoji] = useState("");
   const [comment, setComment] = useState("");
+  const [result, setResult] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const emojis = [
-    { id: 1, icon: hot, label: "Very Bad" },
-    { id: 2, icon: sad, label: "Bad" },
-    { id: 3, icon: confused, label: "Neutral" },
-    { id: 4, icon: smile, label: "Good" },
-    { id: 5, icon: excellent, label: "Excellent" },
+    { id: 1, icon: hot, label: "😡" },
+    { id: 2, icon: sad, label: "😢" },
+    { id: 3, icon: confused, label: "😐" },
+    { id: 4, icon: smile, label: "😊" },
+    { id: 5, icon: excellent, label: "😁" },
   ];
+
+  useEffect(() => {
+    fetchTestResult();
+  }, []);
+
+  async function fetchTestResult(params) {
+    try {
+      const response = await getTestResult();
+      setResult(response);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const handleSubmit = async () => {
+    if (!comment.trim().length < 3) {
+      setErrorMessage("Please enter a comment with at least 3 characters.");
+      return;
+    }
+    try {
+    } catch (error) {}
+  };
+
+  if (!result) {
+    return;
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center  p-4">
@@ -31,11 +60,13 @@ function Success() {
             Congratulations! You have successfully completed the test.
           </div>
           <div className="text-lg mt-2">
-            Score:{" "}
-            <span className="bg-[#FAC167] px-2 py-1 rounded-2xl">45/50</span>
+            Score :
+            <span className="bg-[#FAC167] px-3 py-1 rounded-2xl mx-2">
+              {result.score}/{result.total}
+            </span>
           </div>
           <div className="bg-casal text-white px-4 py-2 rounded-lg mt-2 text-lg font-semibold">
-            Your ID: 784962
+            Your ID: {result.testId}
           </div>
         </div>
 
@@ -53,7 +84,7 @@ function Success() {
             {emojis.map((emoji) => (
               <button
                 key={emoji.id}
-                onClick={() => setSelectedEmoji(emoji.id)}
+                onClick={() => setSelectedEmoji(emoji.label)}
                 className={`p-3 rounded-full border transition-all  cursor-pointer ${
                   selectedEmoji === emoji.id
                     ? "bg-green-100 border-green-500"
@@ -80,9 +111,14 @@ function Success() {
             className="w-full p-3 border rounded-lg"
           ></textarea>
 
+          {errorMessage && (
+            <p className="text-red-500 text-sm">{errorMessage}</p>
+          )}
+
           {/* Submit Button */}
           <Button
-            className="w-80 bg-casal text-white py-2 rounded-lg mt-4"
+            onClick={handleSubmit}
+            className="w-80 bg-casal text-white py-2 rounded-lg mt-4 cursor-pointer"
             label={"Submit Feedback"}
           />
         </div>

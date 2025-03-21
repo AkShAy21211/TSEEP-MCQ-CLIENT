@@ -1,28 +1,46 @@
 import React, { useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../validation";
 import Button from "../components/ui/Button";
+import { login } from "../api/auth";
+import toast from "react-hot-toast";
 function Login() {
-  const [countryCode, setCountryCode] = useState("");
+  const navigate = useNavigate();
+  const [countryCode, setCountryCode] = useState("91");
   const {
     register,
     handleSubmit,
-    setValue,
-    watch,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(loginSchema),
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(countryCode);
-    data.phone = `+${countryCode} ${data.phone}`;
-
-    console.log("Form Submitted:", data);
+    
+    data.phone = `+${countryCode}${data.phone}`;
+    console.log(data.phone);
+    
+    try {
+      const response = await login(data);
+      localStorage.setItem("token", response.token);
+      navigate("/questions");
+      toast.success(response.message, {
+        position: "top-center",
+        duration: 5000,
+      });
+    } catch (error) {
+      console.log(error);
+      
+      toast.error(error.response.data.message, {
+        position: "top-center",
+        duration: 5000,
+      });
+    }
   };
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -78,7 +96,7 @@ function Login() {
           <Button
             label={"Submit"}
             type="submit"
-            className="w-full bg-casal text-white py-2 rounded-md  transition"
+            className="w-full bg-casal text-white py-2 rounded-md  transition cursor-pointer"
           />
         </form>
 
@@ -86,7 +104,7 @@ function Login() {
         <p className="text-center text-sm text-gray-600 mt-4">
           Already have an account?{" "}
           <Link to="/register" className="text-blue-500 hover:underline">
-            Login Now
+            Register Now
           </Link>
         </p>
       </div>

@@ -1,7 +1,7 @@
 import * as yup from "yup";
 
 export const registerSchema = yup.object().shape({
-  fullName: yup
+  fullname: yup
     .string()
     .trim()
     .min(3, "Full Name must be at least 3 characters")
@@ -15,7 +15,7 @@ export const registerSchema = yup.object().shape({
 
   phone: yup
     .string()
-    .matches(/^[6-9]\d{9}$/, "Invalid phone number")
+    .matches(/^\+?[1-9]\d{1,14}$/, "Invalid phone number")
     .required("Phone number is required"),
 
   status: yup
@@ -33,11 +33,12 @@ export const registerSchema = yup.object().shape({
 export const loginSchema = yup.object().shape({
   phone: yup
     .string()
-    .matches(/^[6-9]\d{9}$/, "Invalid phone number")
+    .matches(/^\+?[1-9]\d{1,14}$/, "Invalid phone number") 
     .required("Phone number is required"),
 
   password: yup
     .string()
     .min(6, "Password must be at least 6 characters")
+    .max(20, "Password cannot exceed 20 characters")
     .required("Password is required"),
 });
