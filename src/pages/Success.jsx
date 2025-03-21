@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { FaSmile, FaMeh, FaFrown, FaGrin, FaSadTear } from "react-icons/fa";
 import Button from "../components/ui/Button";
 import check from "../assets/check.png";
 import home from "../assets/home.png";
@@ -8,20 +7,23 @@ import excellent from "../assets/excellent.png";
 import sad from "../assets/sad.png";
 import smile from "../assets/smile.png";
 import hot from "../assets/hot.png";
-import { getTestResult } from "../api/test";
-
+import { getTestResult, sendFeedBack } from "../api/test";
+import Loading from "../components/ui/Loading";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 function Success() {
+  const navigate = useNavigate();
   const [selectedEmoji, setSelectedEmoji] = useState("");
   const [comment, setComment] = useState("");
   const [result, setResult] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
 
   const emojis = [
-    { id: 1, icon: hot, label: "😡" },
-    { id: 2, icon: sad, label: "😢" },
-    { id: 3, icon: confused, label: "😐" },
-    { id: 4, icon: smile, label: "😊" },
-    { id: 5, icon: excellent, label: "😁" },
+    { icon: hot, label: "😡" },
+    { icon: sad, label: "😢" },
+    { icon: confused, label: "😐" },
+    { icon: smile, label: "😊" },
+    { icon: excellent, label: "😁" },
   ];
 
   useEffect(() => {
@@ -38,16 +40,33 @@ function Success() {
   }
 
   const handleSubmit = async () => {
-    if (!comment.trim().length < 3) {
+    if (comment.trim().length < 3) {
       setErrorMessage("Please enter a comment with at least 3 characters.");
       return;
     }
+
     try {
-    } catch (error) {}
+      const response = await sendFeedBack(result._id, {
+        comment,
+        emoji: selectedEmoji,
+      });
+      toast.success(response.message, {
+        duration: 3000,
+        position: "top-center",
+      });
+      setErrorMessage("");
+      localStorage.clear();
+      navigate("/");
+
+      return;
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response.data.message);
+    }
   };
 
   if (!result) {
-    return;
+    return <Loading />;
   }
 
   return (
@@ -83,10 +102,10 @@ function Success() {
           <div className="flex justify-start space-x-4 my-4">
             {emojis.map((emoji) => (
               <button
-                key={emoji.id}
+                key={emoji.label}
                 onClick={() => setSelectedEmoji(emoji.label)}
                 className={`p-3 rounded-full border transition-all  cursor-pointer ${
-                  selectedEmoji === emoji.id
+                  selectedEmoji === emoji.label
                     ? "bg-green-100 border-green-500"
                     : "border-gray-300"
                 }`}
@@ -96,7 +115,7 @@ function Success() {
                   src={emoji.icon}
                   alt={emoji.label}
                   className={`w-10
-              ${selectedEmoji === emoji.id ? "" : " filter grayscale"}
+              ${selectedEmoji === emoji.label ? "" : " filter grayscale"}
                 `}
                 />
               </button>
