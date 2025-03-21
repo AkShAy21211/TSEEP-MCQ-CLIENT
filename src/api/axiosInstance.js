@@ -2,6 +2,7 @@ import axios from "axios";
 
 // Set up the API instance
 
+
 function createAxiosInstance(resource) {
   const api = axios.create({
     baseURL: `${import.meta.env.VITE_REACT_DEPLOY_URL}/api/${resource}`,
