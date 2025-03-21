@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 const Header = () => {
   const navigate = useNavigate();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const token = localStorage.getItem("token");
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
@@ -26,16 +27,18 @@ const Header = () => {
       </div>
 
       {/* User Avatar */}
-      <div
-        className="w-10 h-10 lg:w-16 lg:h-16 rounded-full bg-gray-300 cursor-pointer overflow-hidden"
-        onClick={togglePopup}
-      >
-        <img
-          src={avatar}
-          alt="User Avatar"
-          className="w-full h-full object-cover"
-        />
-      </div>
+      {token && (
+        <div
+          className="w-10 h-10 lg:w-16 lg:h-16 rounded-full bg-gray-300 cursor-pointer overflow-hidden"
+          onClick={togglePopup}
+        >
+          <img
+            src={avatar}
+            alt="User Avatar"
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )}
 
       {/* Logout Popup */}
       {isPopupOpen && (
